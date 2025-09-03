@@ -1,0 +1,379 @@
+{% extends "home.html" %}
+
+<title>{% block title %}Recommend | ShiftFlix{% endblock %}</title>
+
+{% block content %}
+<form method="POST" action="/recommend/">
+  {% csrf_token %}
+<div class="shiftflux-page">
+  <div class="shiftflux-header">
+    <h1>ShitFlix Recommender</h1>
+    <p class="subtitle">Algorithmic movie discovery engine</p>
+  </div>
+
+  <div class="shiftflux-section">
+    <h2>Movie Preferences</h2>
+    
+    <div class="input-field">
+      <label>Movie Name</label>
+      <input type="text" name="movie" placeholder="E.g., Blade Runner 2049" value="{{ movie }}">
+    </div>
+  </div>
+
+  <div class="shiftflux-section">
+    <h2>Recommendation Weights</h2>
+    
+    <div class="weight-control">
+      <label>Genre Match</label>
+      <div class="slider-container">
+        <input type="range" name="genre" min="0" max="100" value="{{ genre|default:50 }}" class="slider">
+        <span class="slider-value">{{ genre|default:50 }}%</span>
+      </div>
+    </div>
+    
+    <div class="weight-control">
+      <label>Cast Similarity</label>
+      <div class="slider-container">
+        <input type="range" name="cast" min="0" max="100" value="{{ cast|default:50 }}" class="slider">
+        <span class="slider-value">{{ cast |default:50 }}%</span>
+      </div>
+    </div>
+    
+    <div class="weight-control">
+      <label>Director</label>
+      <div class="slider-container">
+        <input type="range" name="director" min="0" max="100" value="{{ director|default:50 }}" class="slider">
+        <span class="slider-value">{{ director |default:50 }}%</span>
+      </div>
+    </div>
+    
+    <div class="weight-control">
+      <label>Rating Priority</label>
+      <div class="slider-container">
+        <input type="range" name="rating" min="0" max="100" value="{{ rating|default:50 }}" class="slider">
+        <span class="slider-value">{{ rating|default:50 }}%</span>
+      </div>
+    </div>
+    
+    <div class="weight-control">
+      <label>Era Preference</label>
+      <div class="slider-container">
+        <input type="range" name="year" min="0" max="100" value="{{ year|default:50 }}" class="slider">
+        <span class="slider-value">{{ year|default:50 }}%</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="shiftflux-section">
+    <button class="generate-btn">
+      Generate Recommendations
+      <span class="arrow">→</span>
+    </button>
+  </div>
+</form>
+
+  {% if results %}
+  <div class="shiftflux-section results">
+    <h2>Your Recommendations</h2>
+    <p class="meta-info">Showing {{ results|length }} matches based on your preferences</p>
+    
+    <div class="result-list">
+      {% for movie in results %}
+      <div class="result-item">
+        <div class="rank">{{ forloop.counter }}</div>
+        <div class="details">
+          <h3>{{ movie.title }} <span>({{ movie.release_date|slice:":4" }})</span></h3>
+          <div class="meta">
+            <span>⭐ {{ movie.vote_average }}/10</span>
+            <span>🎭 {{ movie.genres }}</span>
+            <span class="match">🔮 {{ movie.score|floatformat:1 }}% match</span>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+<style>
+  /* Base Styles */
+  body {
+    background: linear-gradient(135deg, #fff5f5 0%, #f8f8ff 100%);
+    min-height: 100vh;
+  }
+
+  .shiftflux-page {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    color: #333;
+    position: relative;
+  }
+
+  .shiftflux-page::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 200px;
+    background: linear-gradient(90deg, rgba(255,105,180,0.1) 0%, rgba(147,112,219,0.1) 100%);
+    z-index: -1;
+    border-radius: 0 0 20px 20px;
+  }
+
+  .shiftflux-header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding-top: 20px;
+  }
+
+  .shiftflux-header h1 {
+    font-size: 2.2rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #ff1493;
+    text-shadow: 1px 1px 3px rgba(255,20,147,0.1);
+  }
+
+  .subtitle {
+    font-size: 1.1rem;
+    color: #9370db;
+    margin-top: 0;
+  }
+
+  /* Sections */
+  .shiftflux-section {
+    background: white;
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 15px rgba(255,105,180,0.1);
+    border: 1px solid rgba(255,105,180,0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+
+  .shiftflux-section:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(255,105,180,0.15);
+  }
+
+  .shiftflux-section h2 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #ff1493;
+  }
+
+  /* Input Fields */
+  .input-field {
+    margin-bottom: 24px;
+  }
+
+  .input-field label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #9370db;
+  }
+
+  .input-field input {
+    width: 100%;
+    padding: 10px 0;
+    border: none;
+    border-bottom: 1px solid #ffb6c1;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s;
+    background: transparent;
+  }
+
+  .input-field input:focus {
+    border-bottom-color: #ff1493;
+  }
+
+  .underline {
+    height: 2px;
+    width: 0;
+    background: linear-gradient(90deg, #ff1493, #9370db);
+    transition: width 0.3s;
+  }
+
+  .input-field input:focus ~ .underline {
+    width: 100%;
+  }
+
+  /* Weight Controls */
+  .weight-control {
+    margin-bottom: 20px;
+  }
+
+  .weight-control label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #9370db;
+  }
+
+  .slider-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .slider {
+    flex: 1;
+    -webkit-appearance: none;
+    height: 4px;
+    background: #ffb6c1;
+    border-radius: 2px;
+    outline: none;
+  }
+
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    background: #ff1493;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(255,20,147,0.3);
+    transition: transform 0.2s;
+  }
+
+  .slider::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
+  }
+
+  .slider-value {
+    min-width: 40px;
+    text-align: right;
+    font-family: monospace;
+    color: #ff1493;
+    font-weight: 500;
+  }
+
+  /* Buttons */
+  .generate-btn {
+    background: linear-gradient(90deg, #ff1493 0%, #9370db 100%);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: 500;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s;
+    box-shadow: 0 2px 10px rgba(255,20,147,0.2);
+  }
+
+  .generate-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255,20,147,0.3);
+  }
+
+  .arrow {
+    font-size: 1.2rem;
+    transition: transform 0.3s;
+  }
+
+  .generate-btn:hover .arrow {
+    transform: translateX(3px);
+  }
+
+  /* Results */
+  .results .meta-info {
+    color: #9370db;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+  }
+
+  .result-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .result-item {
+    display: flex;
+    gap: 15px;
+    padding: 12px;
+    border-radius: 4px;
+    transition: all 0.3s;
+    background: white;
+    box-shadow: 0 1px 5px rgba(255,105,180,0.1);
+    border-left: 3px solid #ffb6c1;
+  }
+
+  .result-item:hover {
+    background: #fff5f5;
+    border-left-color: #ff1493;
+    box-shadow: 0 3px 10px rgba(255,105,180,0.15);
+  }
+
+  .rank {
+    font-weight: 600;
+    color: #ff1493;
+    min-width: 24px;
+    font-size: 1.1rem;
+  }
+
+  .details h3 {
+    margin: 0 0 4px 0;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #333;
+  }
+
+  .details h3 span {
+    color: #9370db;
+    font-weight: 400;
+  }
+
+  .meta {
+    display: flex;
+    gap: 15px;
+    font-size: 0.9rem;
+    color: #666;
+  }
+
+  .match {
+    color: #ff1493;
+    font-weight: 500;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .shiftflux-page {
+      padding: 15px;
+    }
+    
+    .shiftflux-header h1 {
+      font-size: 1.8rem;
+    }
+    
+    .meta {
+      flex-direction: column;
+      gap: 4px;
+    }
+  }
+</style>
+
+<script>
+  // Update slider values display
+  document.querySelectorAll('.slider').forEach(slider => {
+    const valueDisplay = slider.nextElementSibling;
+    valueDisplay.textContent = slider.value + '%';
+    
+    slider.addEventListener('input', () => {
+      valueDisplay.textContent = slider.value + '%';
+    });
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,377 @@
+{% extends "home.html" %}
+
+{% block title %}Services | ShitFlix{% endblock %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Services | ShitFlix</title>
+    <style>
+        :root {
+            --primary: #ff4757;
+            --secondary: #2f3542;
+            --accent: #ff6b81;
+            --light: #f1f2f6;
+            --dark: #1e272e;
+            --gradient: linear-gradient(135deg, #ff4757 0%, #ff6b81 100%);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: var(--gradient);
+            color: white;
+            padding: 60px 0 80px;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            margin-bottom: -30px;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            font-weight: 800;
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            padding: 40px 0;
+        }
+        
+        .service-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+        }
+        
+        .card-header {
+            height: 180px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        
+        .card-header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .card-icon {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            z-index: 2;
+        }
+        
+        .card-title {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            z-index: 2;
+        }
+        
+        .card-body {
+            padding: 25px;
+        }
+        
+        .card-body p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: var(--gradient);
+            color: white;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 71, 87, 0.3);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .testimonials {
+            background: var(--secondary);
+            color: white;
+            padding: 80px 0;
+            margin-top: 60px;
+        }
+        
+        .testimonials h2 {
+            text-align: center;
+            margin-bottom: 50px;
+            font-size: 2.2rem;
+        }
+        
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .testimonial-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 10px;
+            position: relative;
+        }
+        
+        .testimonial-card::before {
+            content: '"';
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            font-size: 5rem;
+            color: rgba(255, 255, 255, 0.1);
+            font-family: Georgia, serif;
+            line-height: 1;
+        }
+        
+        .testimonial-text {
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+        }
+        
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 15px;
+            object-fit: cover;
+        }
+        
+        .author-name {
+            font-weight: 600;
+        }
+        
+        .author-title {
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+        
+        .cta-section {
+            text-align: center;
+            padding: 80px 0;
+        }
+        
+        .cta-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .cta-section p {
+            max-width: 600px;
+            margin: 0 auto 30px;
+            color: #666;
+        }
+        
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Your Perfect Movie Match Awaits</h1>
+            <p class="tagline">ShitFlix uses advanced algorithms and your unique taste profile to deliver personalized movie recommendations you'll love.</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="card-header" style="background-image: url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80')">
+                    <div class="card-icon">🎬</div>
+                    <h3 class="card-title">Personalized Picks</h3>
+                </div>
+                <div class="card-body">
+                    <p>Our AI analyzes your viewing history, ratings, and preferences to curate a custom list of films tailored just for you. Discover hidden gems you'd never find on your own.</p>
+                    <a href="#" class="btn">Try It Now</a>
+                </div>
+            </div>
+            
+            <div class="service-card">
+                <div class="card-header" style="background-image: url('https://images.unsplash.com/photo-1536440136628-849c177e76a1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80')">
+                    <div class="card-icon">🎞️</div>
+                    <h3 class="card-title">Mood Matching</h3>
+                </div>
+                <div class="card-body">
+                    <p>Tell us how you're feeling and we'll suggest the perfect movie to match your mood. Whether you want to laugh, cry, or be on the edge of your seat, we've got you covered.</p>
+                    <a href="#" class="btn">Match My Mood</a>
+                </div>
+            </div>
+            
+            <div class="service-card">
+                <div class="card-header" style="background-image: url('https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80')">
+                    <div class="card-icon">👥</div>
+                    <h3 class="card-title">Group Recommendations</h3>
+                </div>
+                <div class="card-body">
+                    <p>Movie night with friends? We'll analyze everyone's tastes and find the perfect compromise film that the whole group will enjoy. No more endless scrolling debates!</p>
+                    <a href="#" class="btn">Create Group</a>
+                </div>
+            </div>
+            
+            <div class="service-card">
+                <div class="card-header" style="background-image: url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80')">
+                    <div class="card-icon">⏳</div>
+                    <h3 class="card-title">Time-Based Suggestions</h3>
+                </div>
+                <div class="card-body">
+                    <p>Only have 90 minutes? Want to binge a trilogy? Tell us how much time you have and we'll recommend movies that fit your schedule perfectly.</p>
+                    <a href="#" class="btn">Set Time Filter</a>
+                </div>
+            </div>
+            
+            <div class="service-card">
+                <div class="card-header" style="background-image: url('https://images.unsplash.com/photo-1535016120720-40c646be5580?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80')">
+                    <div class="card-icon">🎭</div>
+                    <h3 class="card-title">Deep Genre Exploration</h3>
+                </div>
+                <div class="card-body">
+                    <p>Go beyond basic genres. We'll help you discover nuanced subgenres like "neo-noir psychological thrillers" or "quirky coming-of-age dramedies" based on your tastes.</p>
+                    <a href="#" class="btn">Explore Genres</a>
+                </div>
+            </div>
+            
+            <div class="service-card">
+                <div class="card-header" style="background-image: url('https://images.unsplash.com/photo-1543536448-d209d2d13a1c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80')">
+                    <div class="card-icon">🔄</div>
+                    <h3 class="card-title">Evolving Recommendations</h3>
+                </div>
+                <div class="card-body">
+                    <p>Our system learns from every movie you watch and rate, constantly refining your profile to deliver even better suggestions over time.</p>
+                    <a href="#" class="btn">See Your Progress</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <section class="testimonials">
+        <div class="container">
+            <h2>What Movie Lovers Say</h2>
+            <div class="testimonial-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-text">
+                        <p>As someone who's seen thousands of films, I'm impressed by how often ShitFlix surfaces obscure gems that perfectly match my eclectic taste.</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <img src="/static/shreyas_me.png" alt="shreyas." class="author-avatar">
+                        <div>
+                            <div class="author-name">Shreyas Shankar.</div>
+                            <div class="author-title">Film Critic</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="cta-section">
+        <div class="container">
+            <h2>Ready to Discover Your Next Favorite Movie?</h2>
+            <p>Join thousands of film enthusiasts who never struggle to find the perfect movie again. Our recommendation engine gets smarter the more you use it.</p>
+            <a href="/" class="btn" style="padding: 15px 30px; font-size: 1.1rem;">Get Started - It's Free</a>
+            <a href="#" class="btn btn-outline" style="padding: 15px 30px; font-size: 1.1rem; margin-left: 15px;">Learn How It Works</a>
+        </div>
+    </section>
+</body>
+</html>
+
+{% endblock %}
+
+

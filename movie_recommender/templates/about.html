@@ -1,0 +1,360 @@
+{% extends "home.html" %}
+
+{% block title %}About Us | ShitFlix{% endblock %}
+
+{% block content %}
+<style>
+    :root {
+        --primary: #ff4757;
+        --secondary: #2f3542;
+        --accent: #ff6b81;
+        --light: #f1f2f6;
+        --dark: #1e272e;
+        --gradient: linear-gradient(135deg, #ff4757 0%, #ff6b81 100%);
+    }
+    
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--dark);
+        color: var(--light);
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+    }
+    
+    .hero-header {
+        background: var(--gradient);
+        padding: 120px 0 150px;
+        text-align: center;
+        clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+        margin-bottom: -50px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .hero-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') center/cover;
+        opacity: 0.15;
+        z-index: 0;
+    }
+    
+    .logo {
+        font-size: 4.5rem;
+        font-weight: 900;
+        color: white;
+        text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.2);
+        margin-bottom: 1rem;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .tagline {
+        font-size: 1.5rem;
+        max-width: 800px;
+        margin: 0 auto 2rem;
+        opacity: 0.9;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        position: relative;
+    }
+    
+    .about-content {
+        background: white;
+        border-radius: 15px;
+        padding: 50px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        margin-bottom: 60px;
+        color: var(--secondary);
+    }
+    
+    h2 {
+        font-size: 2.5rem;
+        color: var(--primary);
+        margin-bottom: 1.5rem;
+        position: relative;
+        display: inline-block;
+    }
+    
+    h2:after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+        width: 60px;
+        height: 4px;
+        background: var(--gradient);
+        border-radius: 2px;
+    }
+    
+    h3 {
+        font-size: 1.8rem;
+        color: var(--accent);
+        margin: 2rem 0 1rem;
+    }
+    
+    .mission-box {
+        background: rgba(255, 107, 129, 0.1);
+        padding: 30px;
+        border-radius: 10px;
+        border-left: 5px solid var(--accent);
+        margin: 2rem 0;
+    }
+    
+    ul, ol {
+        padding-left: 20px;
+        margin: 1rem 0;
+    }
+    
+    li {
+        margin-bottom: 0.5rem;
+    }
+    
+    .team-section {
+        background: var(--secondary);
+        padding: 60px 0;
+        margin: 60px 0;
+        border-radius: 15px;
+    }
+    
+    .team-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        margin-top: 40px;
+    }
+    
+    .team-card {
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        color: var(--secondary);
+    }
+    
+    .team-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    }
+    
+    .team-img {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+    }
+    
+    .team-info {
+        padding: 25px;
+    }
+    
+    .team-name {
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin-bottom: 5px;
+        color: var(--primary);
+    }
+    
+    .team-role {
+        color: var(--accent);
+        font-weight: 600;
+        margin-bottom: 15px;
+    }
+    
+    .cta-section {
+        text-align: center;
+        padding: 60px 0;
+    }
+    
+    .btn {
+        display: inline-block;
+        background: var(--gradient);
+        color: white;
+        padding: 15px 40px;
+        font-size: 1.2rem;
+        font-weight: 600;
+        border-radius: 50px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(255, 107, 129, 0.3);
+        border: none;
+        cursor: pointer;
+    }
+    
+    .btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(255, 107, 129, 0.4);
+    }
+    
+    footer {
+        background: var(--dark);
+        color: white;
+        padding: 40px 0;
+        text-align: center;
+        margin-top: 60px;
+    }
+    
+    .footer-text {
+        opacity: 0.8;
+        margin-bottom: 10px;
+    }
+    
+    @media (max-width: 768px) {
+        .logo {
+            font-size: 3rem;
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+        }
+        
+        .about-content {
+            padding: 30px;
+        }
+        
+        h2 {
+            font-size: 2rem;
+        }
+    }
+</style>
+<body>
+    <header class="hero-header">
+        <div class="container">
+            <div class="logo">SHITFLIX</div>
+            <p class="tagline">Where questionable taste meets surprisingly good recommendations</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <main class="about-content">
+            <h2>About Our Service</h2>
+            
+            <div class="mission-box">
+                <h3>Our Mission: To provide the best possible suggestions to save your day</h3>
+                <p>At ShitFlix, we believe that life's too short to only watch critically acclaimed masterpieces. Sometimes you want to watch that 2-star rated zombie romance from 2007, and we're here to help you find it.</p>
+                <p>Founded in 2025 by Shreyas Shankar, a student of MIT Bangalore, ShitFlix has become the premier destination for discovering movies... nah I'm just kidding, nobody knows about this, please promote 😭🙏🏿.</p>
+            </div>
+            
+            <h3>What Makes Us Different</h3>
+            <p>What we do is, we run a ML model taking into considerations the rating, how similar it is to the previous films you have watched, your interests and the overall reviews of the movie.</p>
+            <p>Whether you're looking for:</p>
+            <ul>
+                <li>Horror movies with comedy in them</li>
+                <li>Rom-coms that make you question humanity</li>
+                <li>Action movies where the explosions out-act the cast</li>
+                <li>A simple thriller not beating around the bush</li>
+            </ul>
+            <p>...we've got you covered.</p>
+            
+            <h3>Our "Expert" Curation Process</h3>
+            <p>We go through all these parameters and finally the type of movies you find interesting to watch and give suggestions based on that.</p>
+            <ol>
+                <li>So ig it is safe to say, we never go wrong 🙄</li>
+            </ol>
+        </main>
+        
+        <section class="team-section">
+    <h2>Know About Me</h2>
+    <div class="team-grid">
+        <div class="team-card">
+            <div class="team-img-container">
+                <img src="/static/shreyas_me.png" alt="Shreyas Shankar" class="team-img">
+            </div>
+            <div class="team-info">
+                <h4 class="team-name">Shreyas Shankar</h4>
+                <p class="team-role">Founder & Chief Movie Enthusiast</p>
+                <p>Have barely watched 10 English movies 😔</p>
+                <p>If you haven't watched Breaking Bad, what are you doing here 😭, go watch it first.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .team-img-container {
+        width: 100%;
+        height: 250px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        background: #f1f2f6; /* Fallback background */
+    }
+
+    .team-img {
+        height: 100%;
+        width: auto;
+        max-width: 100%;
+        object-fit: contain; /* Changed from cover to contain */
+        border-radius: 10px 10px 0 0;
+    }
+
+    /* Alternative version if you prefer the image to fill width */
+    /*
+    .team-img {
+        width: 100%;
+        height: auto;
+        max-height: 250px;
+        object-fit: contain;
+        border-radius: 10px 10px 0 0;
+    }
+    */
+
+    /* Rest of your existing team card styles */
+    .team-card {
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        color: var(--secondary);
+    }
+
+    .team-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    }
+
+    .team-info {
+        padding: 25px;
+    }
+
+    .team-name {
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin-bottom: 5px;
+        color: var(--primary);
+    }
+
+    .team-role {
+        color: var(--accent);
+        font-weight: 600;
+        margin-bottom: 15px;
+    }
+</style>
+        
+        <section class="cta-section">
+            <h2>Ready to Sort Your Evening?</h2>
+            <p>Idk if anyone is using this, but if you are, that's amazing 🤩</p>
+            <a href="/" class="btn">Find Movies of Your Type</a>
+        </section>
+    </div>
+    
+    <footer>
+        <p class="footer-text">&copy; 2025 ShitFlix - Don't blame me if the movie we predicted was mid 😭🙏🏿</p>
+        <p class="footer-text">Disclaimer: Please don't report my page for the name, I just thought it would be funny I swear 😭</p>
+    </footer>
+</body>
+</html>
+{% endblock %}

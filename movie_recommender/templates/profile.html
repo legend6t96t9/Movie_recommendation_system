@@ -1,0 +1,245 @@
+{% extends "home.html" %}  <!-- Extends your base template -->
+
+{% block title %}Profile | ShitFlix{% endblock %}
+
+{% block content %}
+<style>
+  :root {
+    --primary: #ff4757;
+    --secondary: #2f3542;
+    --accent: #ff6b81;
+    --gradient: linear-gradient(135deg, #ff4757 0%, #ff6b81 100%);
+  }
+  
+  .profile-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+  
+  .profile-header {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 3rem;
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  }
+  
+  .profile-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: var(--gradient);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    font-weight: bold;
+    color: white;
+    flex-shrink: 0;
+  }
+  
+  .profile-info h1 {
+    font-size: 2.2rem;
+    margin-bottom: 0.5rem;
+    color: var(--secondary);
+  }
+  
+  .profile-info p {
+    color: #666;
+    margin-bottom: 1rem;
+  }
+  
+  .stats-container {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 1rem;
+  }
+  
+  .stat-box {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    text-align: center;
+    min-width: 120px;
+  }
+  
+  .stat-number {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+  }
+  
+  .stat-label {
+    color: #666;
+    font-size: 0.9rem;
+  }
+  
+  .section-title {
+    font-size: 1.5rem;
+    margin: 2rem 0 1rem;
+    color: var(--secondary);
+    position: relative;
+    padding-bottom: 0.5rem;
+  }
+  
+  .section-title:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background: var(--gradient);
+  }
+  
+  .movie-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+  
+  .movie-card {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+  }
+  
+  .movie-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(255,107,129,0.2);
+  }
+  
+  .movie-poster {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+  }
+  
+  .movie-details {
+    padding: 1rem;
+  }
+  
+  .movie-title {
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+    color: var(--secondary);
+  }
+  
+  .movie-meta {
+    color: var(--accent);
+    font-size: 0.9rem;
+  }
+  
+  .btn-edit {
+    background: var(--gradient);
+    color: white;
+    border: none;
+    padding: 0.5rem 1.5rem;
+    border-radius: 50px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-edit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255,107,129,0.3);
+  }
+  
+  @media (max-width: 768px) {
+    .profile-header {
+      flex-direction: column;
+      text-align: center;
+    }
+    
+    .stats-container {
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+  }
+</style>
+
+<div class="profile-container">
+  <!-- Profile Header Section -->
+  <div class="profile-header">
+    <div class="profile-avatar">
+      {{ user.username|first|upper }}
+    </div>
+    
+    <div class="profile-info">
+      <h1>{{ user.username }}</h1>
+      <p>Member since {{ user.date_joined|date:"F Y" }}</p>
+      
+      <div class="stats-container">
+        <div class="stat-box">
+          <div class="stat-number">142</div>
+          <div class="stat-label">Movies Watched</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-number">87</div>
+          <div class="stat-label">Reviews</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-number">4.6</div>
+          <div class="stat-label">Avg Rating</div>
+        </div>
+      </div>
+    </div>
+    
+    <button class="btn-edit">Edit Profile</button>
+  </div>
+  
+  <!-- Recently Watched Section -->
+  <h2 class="section-title">Recently Watched</h2>
+  <div class="movie-grid">
+    <div class="movie-card">
+      <img src="/static/inception.jpeg" class="movie-poster" alt="Inception">
+      <div class="movie-details">
+        <div class="movie-title">Inception</div>
+        <div class="movie-meta">Sci-Fi • ★★★★☆</div>
+      </div>
+    </div>
+    
+    <div class="movie-card">
+      <img src="/static/interstellar.jpeg" class="movie-poster" alt="Interstellar">
+      <div class="movie-details">
+        <div class="movie-title">Interstellar</div>
+        <div class="movie-meta">Sci-Fi • ★★★★★</div>
+      </div>
+    </div>
+    
+    <!-- Add more movie cards as needed -->
+  </div>
+  
+  <!-- Watchlist Section -->
+  <h2 class="section-title">Your Watchlist</h2>
+  <div class="movie-grid">
+    <div class="movie-card">
+      <img src="/static/dkr.jpeg" class="movie-poster" alt="The Dark Knight">
+      <div class="movie-details">
+        <div class="movie-title">The Dark Knight</div>
+        <div class="movie-meta">Action • Added 3 days ago</div>
+      </div>
+    </div>
+    
+    <div class="movie-card">
+      <img src="/static/Tenet2.jpg" class="movie-poster" alt="Tenet">
+      <div class="movie-details">
+        <div class="movie-title">Tenet</div>
+        <div class="movie-meta">Action • Added 1 week ago</div>
+      </div>
+    </div>
+    
+    <!-- Add more watchlist items as needed -->
+  </div>
+</div>
+{% endblock %}

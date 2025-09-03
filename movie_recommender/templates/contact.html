@@ -1,0 +1,285 @@
+{% extends "home.html" %}
+
+{% block title %}Contact | ShitFlix{% endblock %}
+
+{% block content %}
+<style>
+    :root {
+        --primary: #ff4757;
+        --secondary: #2f3542;
+        --accent: #ff6b81;
+        --light: #f1f2f6;
+        --dark: #1e272e;
+        --gradient: linear-gradient(135deg, #ff4757 0%, #ff6b81 100%);
+    }
+    
+    .contact-hero {
+        background: var(--gradient);
+        padding: 100px 0 120px;
+        text-align: center;
+        clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+        margin-bottom: -30px;
+        color: white;
+    }
+    
+    .contact-hero h1 {
+        font-size: 3rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+    }
+    
+    .contact-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+    
+    .contact-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        margin-top: 40px;
+    }
+    
+    .contact-form-section {
+        background: white;
+        border-radius: 15px;
+        padding: 40px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    }
+    
+    .contact-form-section h2 {
+        color: var(--primary);
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+        position: relative;
+    }
+    
+    .contact-form-section h2:after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+        width: 60px;
+        height: 4px;
+        background: var(--gradient);
+        border-radius: 2px;
+    }
+    
+    .form-group {
+        margin-bottom: 25px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: var(--secondary);
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+    
+    .form-control:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(255, 107, 129, 0.2);
+    }
+    
+    textarea.form-control {
+        min-height: 150px;
+        resize: vertical;
+    }
+    
+    .submit-btn {
+        background: var(--gradient);
+        color: white;
+        border: none;
+        padding: 15px 30px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 100%;
+        box-shadow: 0 5px 15px rgba(255, 107, 129, 0.3);
+    }
+    
+    .submit-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(255, 107, 129, 0.4);
+    }
+    
+    .quick-links-section {
+        background: white;
+        border-radius: 15px;
+        padding: 40px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    }
+    
+    .quick-links-section h3 {
+        color: var(--primary);
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+        position: relative;
+    }
+    
+    .quick-links-section h3:after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+        width: 60px;
+        height: 4px;
+        background: var(--gradient);
+        border-radius: 2px;
+    }
+    
+    .quick-links-list {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .quick-link {
+        margin-bottom: 15px;
+        padding: 15px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+    }
+    
+    .quick-link:hover {
+        background: rgba(255, 107, 129, 0.1);
+        transform: translateX(5px);
+    }
+    
+    .quick-link svg {
+        margin-right: 15px;
+        min-width: 24px;
+    }
+    
+    .quick-link a {
+        color: var(--secondary);
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    
+    .quick-link:hover a {
+        color: var(--primary);
+    }
+    
+    @media (max-width: 768px) {
+        .contact-content {
+            grid-template-columns: 1fr;
+        }
+        
+        .contact-hero h1 {
+            font-size: 2.2rem;
+        }
+    }
+</style>
+
+<div class="contact-hero">
+    <div class="container">
+        <h1>Contact Us</h1>
+        <p>Got questions? We've got answers (maybe)</p>
+    </div>
+</div>
+
+<div class="contact-container">
+    <div class="contact-content">
+        <div class="contact-form-section">
+            <h2>Something serious 😱??</h2>
+            {% if messages %}
+            <div class="alert-messages">
+                {% for message in messages %}
+                <div class="alert" style="padding: 15px; background: #ffebee; color: #c62828; border-radius: 8px; margin-bottom: 20px;">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            <form method="POST" action="/contact/">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" class="form-control" placeholder="Your full name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" class="form-control" placeholder="you@example.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="concern">Your Concern</label>
+                    <textarea id="concern" name="concern" class="form-control" placeholder="What's on your mind?" required></textarea>
+                </div>
+                
+                <button type="submit" class="submit-btn">Submit</button>
+            </form>
+        </div>
+        
+        <div class="quick-links-section">
+            <h3>Quick Links</h3>
+            <ul class="quick-links-list">
+                <li class="quick-link">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="#ff4757">
+                        <path fill-rule="evenodd" d="M12 20a8 8 0 110-16 8 8 0 010 16zM2 12c0 5.523 4.477 10 10 10s10-4.477 10-10S17.523 2 12 2 2 6.477 2 12zm8.773-4.91l.409 6.546h1.636l.41-6.545h-2.455zM12 14.865a1.227 1.227 0 110 2.454 1.227 1.227 0 010-2.454z" clip-rule="evenodd"></path>
+                    </svg>
+                    <a href="/en/node/108239/IN">Content Grievances in India</a>
+                </li>
+                
+                <li class="quick-link">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="#ff4757">
+                        <path d="M17 10V7A5 5 0 007 7v3H5v12h14V10zM9 7a3 3 0 016 0v3H9zm8 13H7v-8h10z"></path>
+                        <path d="M11 14h2v4h-2z"></path>
+                    </svg>
+                    <a href="https://netflix.com/password" target="_blank" rel="noopener">Reset password</a>
+                </li>
+                
+                <li class="quick-link">
+                    <svg width="24" height="24" viewBox="0 0 16 16" fill="#ff4757">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M0.75 2C0.335786 2 0 2.33579 0 2.75V12.25C0 13.2165 0.783501 14 1.75 14H14.25C15.2165 14 16 13.2165 16 12.25V2.75C16 2.33579 15.6642 2 15.25 2H0.75ZM8 8.00978L2.76865 3.5H13.2313L8 8.00978ZM8.4897 9.56806L14.5 4.38677V12.25C14.5 12.3881 14.3881 12.5 14.25 12.5H1.75C1.61193 12.5 1.5 12.3881 1.5 12.25V4.38677L7.5103 9.56806L8 9.99022L8.4897 9.56806Z"></path>
+                    </svg>
+                    <a href="https://netflix.com/email" target="_blank" rel="noopener">Update email</a>
+                </li>
+                
+                <li class="quick-link">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="#ff4757">
+                        <path fill="none" d="M0 0h24v24H0z"></path>
+                        <path d="M12 2a10 10 0 1010 10A10 10 0 0012 2zm0 18a8 8 0 118-8 8 8 0 01-8 8z"></path>
+                        <path d="M11.89 14.72a1.47 1.47 0 101 .43 1.39 1.39 0 00-1-.43zM14.09 7a4.58 4.58 0 00-1.91-.38 4.6 4.6 0 00-2 .42 3.52 3.52 0 00-2 2.73h2.31A1.21 1.21 0 0111 9a1.81 1.81 0 011-.25 1.69 1.69 0 011 .28.82.82 0 01.38.67 1 1 0 01-.24.62 4.36 4.36 0 01-1 .73A3.27 3.27 0 0011 12.16a2.94 2.94 0 00-.31 1.43v.31h2.27v-.19a1.25 1.25 0 01.22-.68 2.83 2.83 0 01.92-.75 4.36 4.36 0 001.35-1.14 2.31 2.31 0 00.46-1.45 2.83 2.83 0 00-.47-1.62A3.19 3.19 0 0014.09 7z"></path>
+                    </svg>
+                    <a href="https://netflix.com/loginhelp" target="_blank" rel="noopener">Get help signing in</a>
+                </li>
+                
+                <li class="quick-link">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="#ff4757">
+                        <path d="M20 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2zM4 6h16v2H4zm0 12v-8h16v8z"></path>
+                        <path d="M15 14h3v2h-3z"></path>
+                    </svg>
+                    <a href="https://netflix.com/YourAccountPayment" target="_blank" rel="noopener">Update payment method</a>
+                </li>
+                
+                <li class="quick-link">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="#ff4757">
+                        <path d="M20 3.5v1.197L4 8.254V7.5H2v8h2v-.754l1 .223V18.5c0 .459.313.858.757.971l4 1a1 1 0 001.042-.371l2.471-3.293L20 18.301V19.5h2v-16h-2zM9.598 18.369L7 17.719v-2.307l4.127.918-1.529 2.039zM4 12.697v-2.394l16-3.557v9.508L4 12.697z"></path>
+                    </svg>
+                    <a href="/en/titlerequest?ui_action=title-suggestion-quicklinks">Request TV shows or movies</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

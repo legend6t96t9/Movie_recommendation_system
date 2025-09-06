@@ -9,6 +9,10 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from .recommender import recommend_with_dynamic_weights
 
+from .models import PasswordResetOTP
+from .forms import ForgotPasswordForm, OTPVerificationForm, ResetPasswordForm
+from django.utils.timezone import now, timedelta
+
 
 def home(request):
     return render(request, 'home.html')
@@ -114,4 +118,87 @@ def recommend_view(request):
             context['error'] = str(e)
 
     return render(request, 'recommend.html', context)
+
+def forgot_password(request):
+    if request.method == "POST":
+        form = ForgotPasswordForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            try:
+                user = User.objects.get(email=email)
+            except User.DoesNotExist:
+                messages.error(request, "No account with this email exists.")
+                return redirect('forgotpwd')
+
+            otp = PasswordResetOTP.generate_otp()
+            PasswordResetOTP.objects.create(user=user, otp=otp)
+
+            # send OTP email
+            send_mail(
+                "Your Password Reset OTP",
+                f"Your OTP is {otp}",
+                "noreply@yourdomain.com",
+                [email],
+                fail_silently=False,
+            )
+
+            request.session['reset_user_id'] = user.id
+            messages.success(request, "OTP sent to your email.")
+            return redirect('verifyotp')
+    else:
+        form = ForgotPasswordForm()
+    return render(request, "forgotpwd.html", {"form": form})
+
+
+def verify_otp(request):
+    if request.method == "POST":
+        form = OTPVerificationForm(request.POST)
+        if form.is_valid():
+            otp = form.cleaned_data['otp']
+            user_id = request.session.get('reset_user_id')
+            if not user_id:
+                messages.error(request, "Session expired. Try again.")
+                return redirect('forgotpwd')
+
+            try:
+                otp_record = PasswordResetOTP.objects.filter(
+                    user_id=user_id, otp=otp
+                ).latest('created_at')
+            except PasswordResetOTP.DoesNotExist:
+                messages.error(request, "Invalid OTP.")
+                return redirect('verifyotp')
+
+            # check expiry (5 minutes)
+            if otp_record.created_at < now() - timedelta(minutes=5):
+                messages.error(request, "OTP expired. Try again.")
+                return redirect('forgotpwd')
+
+            request.session['otp_verified'] = True
+            return redirect('resetpassword')
+    else:
+        form = OTPVerificationForm()
+    return render(request, "verifyotp.html", {"form": form})
+
+
+def reset_password(request):
+    if not request.session.get('otp_verified'):
+        return redirect('forgotpwd')
+
+    if request.method == "POST":
+        form = ResetPasswordForm(request.POST)
+        if form.is_valid():
+            new_password = form.cleaned_data['new_password']
+            user_id = request.session.get('reset_user_id')
+            user = User.objects.get(id=user_id)
+            user.set_password(new_password)
+            user.save()
+
+            # clear session data
+            request.session.flush()
+
+            messages.success(request, "Password changed successfully! You can now log in.")
+            return redirect('login')
+    else:
+        form = ResetPasswordForm()
+    return render(request, "resetpassword.html", {"form": form})
 
